@@ -1,16 +1,15 @@
 import datetime as dt
 import connection_credentials
 from pytz import timezone
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Select, Float, NVARCHAR, DateTime
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Select, Float, NVARCHAR, DateTime, SmallInteger, CheckConstraint
 from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.dialects.postgresql import MEDIUMINT, TINYINT
 from sqlalchemy.sql import func
 
 # Create connection string
 connection_string = connection_credentials.get_connection_string()
 
 # Establish connection to postgres
-# engine = create_engine(connection_string, echo = True)
+engine = create_engine(connection_string, echo = True)
 
 # Create metadata object
 meta_data = MetaData()
@@ -23,7 +22,7 @@ roleType = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
+    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
 state = Table(
@@ -33,7 +32,7 @@ state = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
+    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
 location = Table(
@@ -49,7 +48,7 @@ location = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
+    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
 contact = Table(
@@ -64,7 +63,7 @@ contact = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
+    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
 device = Table(
@@ -78,7 +77,7 @@ device = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
+    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
 payment_tiers = Table(
@@ -88,7 +87,7 @@ payment_tiers = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
+    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
 user = Table(
@@ -97,14 +96,16 @@ user = Table(
     Column("Username", NVARCHAR(255), nullable=False, unique=True),
     Column("Email", NVARCHAR(255), nullable=False, unique=True),
     Column("RoleTypeId", Integer, ForeignKey('roleType.Id'), nullable=False),
-    Column("IsActive", TINYINT, nullable=False, default=1),
-    Column("PaymentTierTypeId", TINYINT, ForeignKey('paymentTierType.Id'), nullable=False, default=1,),
+    Column("IsActive", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=1),
+    Column("PaymentTierTypeId", SmallInteger, ForeignKey('paymentTierType.Id'), nullable=False, default=1,),
     Column("ContactId", Integer, ForeignKey('contact.Id'), unique=True),
     Column("DeviceId", Integer, ForeignKey('deviceInfo.Id'), unique=True),
     Column("LastLoginDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
+    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
+# Create tables
+meta_data.create_all(engine)
