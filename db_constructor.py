@@ -22,23 +22,6 @@ connection_string = f'postgresql+psycopg2:/{username}:{password}@{host}:{port}/{
 # Create metadata object
 meta_data = MetaData()
 
-user = Table(
-    "user", meta_data,
-    Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
-    Column("Username", NVARCHAR(255), nullable=False, unique=True),
-    Column("Email", NVARCHAR(255), nullable=False, unique=True),
-    Column("RoleTypeId", Integer, nullable=False, ForeignKey=True),
-    Column("IsActive", TINYINT, nullable=False, default=1),
-    Column("TierTypeId", TINYINT, nullable=False, default=1, ForeignKey=True),
-    Column("ContactId", Integer, ForeignKey=True, unique=True),
-    Column("DeviceId", Integer, ForeignKey=True, unique=True),
-    Column("LastLoginDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
-    Column("UpdateDateUTC", DateTime, nullable=True),
-    Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", TINYINT, nullable=False, default=0),
-)
-
 roleType = Table(
     "roleType", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
@@ -50,15 +33,10 @@ roleType = Table(
     Column("Deleted", TINYINT, nullable=False, default=0),
 )
 
-contact = Table(
-    "contacts", meta_data,
+state = Table(
+    "state", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
-    Column("FullName", NVARCHAR(255), nullable=False),
-    Column("FirstName", NVARCHAR(255), nullable=False),
-    Column("LastName", NVARCHAR(255), nullable=False),
-    Column("EmailAddress", NVARCHAR(255), nullable=False, unique=True),
-    Column("PhoneNumber", NVARCHAR(255), nullable=False, unique=True),
-    Column("LocationId", Integer, unique=True),
+    Column("Abbreviation", NVARCHAR(2), autoincrement=True, nullable=False),
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
@@ -74,16 +52,22 @@ location = Table(
     Column("PostalCode", NVARCHAR(255)),
     Column("Latitude", Float),
     Column("Longitude", Float),
+    Column("StateId", Integer, ForeignKey('state.Id')),
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", TINYINT, nullable=False, default=0),
 )
 
-state = Table(
-    "state", meta_data,
+contact = Table(
+    "contacts", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
-    Column("Abbreviation", NVARCHAR(2), autoincrement=True, nullable=False),
+    Column("FullName", NVARCHAR(255), nullable=False),
+    Column("FirstName", NVARCHAR(255), nullable=False),
+    Column("LastName", NVARCHAR(255), nullable=False),
+    Column("EmailAddress", NVARCHAR(255), nullable=False, unique=True),
+    Column("PhoneNumber", NVARCHAR(255), nullable=False, unique=True),
+    Column("LocationId", Integer, ForeignKey('location.Id'), unique=True, ),
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
@@ -105,7 +89,7 @@ device = Table(
 )
 
 payment_tiers = Table(
-    "paymentTiers", meta_data,
+    "paymentTierType", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
     Column("Name", NVARCHAR(255), nullable=False),
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
@@ -114,3 +98,19 @@ payment_tiers = Table(
     Column("Deleted", TINYINT, nullable=False, default=0),
 )
 
+user = Table(
+    "user", meta_data,
+    Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
+    Column("Username", NVARCHAR(255), nullable=False, unique=True),
+    Column("Email", NVARCHAR(255), nullable=False, unique=True),
+    Column("RoleTypeId", Integer, ForeignKey('roleType.Id'), nullable=False),
+    Column("IsActive", TINYINT, nullable=False, default=1),
+    Column("PaymentTierTypeId", TINYINT, ForeignKey('paymentTierType.Id'), nullable=False, default=1,),
+    Column("ContactId", Integer, ForeignKey('contact.Id'), unique=True),
+    Column("DeviceId", Integer, ForeignKey('deviceInfo.Id'), unique=True),
+    Column("LastLoginDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("UpdateDateUTC", DateTime, nullable=True),
+    Column("DeleteDateUTC", DateTime, nullable=True),
+    Column("Deleted", TINYINT, nullable=False, default=0),
+)
