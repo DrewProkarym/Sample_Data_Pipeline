@@ -1,8 +1,6 @@
 import datetime as dt
 import connection_credentials
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Select, Float, String, DateTime, SmallInteger
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.sql import func
 
 # Create connection string
 connection_string = connection_credentials.get_connection_string()
