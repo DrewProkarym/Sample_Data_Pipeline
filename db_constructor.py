@@ -1,6 +1,6 @@
 import datetime as dt
 import connection_credentials
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Select, Float, String, DateTime, SmallInteger, CheckConstraint
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Select, Float, String, DateTime, SmallInteger
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
 
@@ -21,7 +21,7 @@ roleType = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
+    Column("Deleted", SmallInteger, nullable=False, default=0),
 )
 
 state = Table(
@@ -31,7 +31,7 @@ state = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
+    Column("Deleted", SmallInteger, nullable=False, default=0),
 )
 
 location = Table(
@@ -47,7 +47,7 @@ location = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
+    Column("Deleted", SmallInteger, nullable=False, default=0),
 )
 
 contact = Table(
@@ -62,7 +62,7 @@ contact = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
+    Column("Deleted", SmallInteger, nullable=False, default=0),
 )
 
 device = Table(
@@ -76,7 +76,7 @@ device = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
+    Column("Deleted", SmallInteger, nullable=False, default=0),
 )
 
 payment_tiers = Table(
@@ -86,7 +86,7 @@ payment_tiers = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
+    Column("Deleted", SmallInteger, nullable=False, default=0),
 )
 
 user = Table(
@@ -95,7 +95,7 @@ user = Table(
     Column("Username", String(255), nullable=False, unique=True),
     Column("Email", String(255), nullable=False, unique=True),
     Column("RoleTypeId", Integer, ForeignKey('roleType.Id'), nullable=False),
-    Column("IsActive", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=1),
+    Column("IsActive", SmallInteger, nullable=False, default=1),
     Column("PaymentTierTypeId", SmallInteger, ForeignKey('paymentTierType.Id'), nullable=False, default=1,),
     Column("ContactId", Integer, ForeignKey('contacts.Id'), unique=True),
     Column("DeviceId", Integer, ForeignKey('deviceInfo.Id'), unique=True),
@@ -103,7 +103,7 @@ user = Table(
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
+    Column("Deleted", SmallInteger, nullable=False, default=0),
 )
 
 # Create tables
