@@ -58,7 +58,7 @@ contact = Table(
     Column("LastName", NVARCHAR(255), nullable=False),
     Column("EmailAddress", NVARCHAR(255), nullable=False, unique=True),
     Column("PhoneNumber", NVARCHAR(255), nullable=False, unique=True),
-    Column("LocationId", Integer, ForeignKey('location.Id'), unique=True, ),
+    Column("LocationId", Integer, ForeignKey('locations.Id'), unique=True, ),
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
@@ -97,7 +97,7 @@ user = Table(
     Column("RoleTypeId", Integer, ForeignKey('roleType.Id'), nullable=False),
     Column("IsActive", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=1),
     Column("PaymentTierTypeId", SmallInteger, ForeignKey('paymentTierType.Id'), nullable=False, default=1,),
-    Column("ContactId", Integer, ForeignKey('contact.Id'), unique=True),
+    Column("ContactId", Integer, ForeignKey('contacts.Id'), unique=True),
     Column("DeviceId", Integer, ForeignKey('deviceInfo.Id'), unique=True),
     Column("LastLoginDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
@@ -107,4 +107,4 @@ user = Table(
 )
 
 # Create tables
-# meta_data.create_all(engine)
+meta_data.create_all(engine)
