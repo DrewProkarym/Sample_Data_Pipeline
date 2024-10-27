@@ -1,6 +1,3 @@
-# CreateDateUTC will be created with default value of current_time UTC for the payment tier type table. Also for user role.
-# Some users will be active even though they are deleted. Fix this in normalization.
-# Create FullName based on a trimmed and concated first and last name.
 import datetime as dt
 import connection_credentials
 from pytz import timezone
