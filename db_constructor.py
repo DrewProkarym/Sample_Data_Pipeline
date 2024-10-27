@@ -1,6 +1,5 @@
 import datetime as dt
 import connection_credentials
-from pytz import timezone
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Select, Float, NVARCHAR, DateTime, SmallInteger, CheckConstraint
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
@@ -19,7 +18,7 @@ roleType = Table(
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
     Column("Name", NVARCHAR(255), nullable=False, unique=True),
     Column("Description", NVARCHAR(255), nullable=True),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
@@ -29,7 +28,7 @@ state = Table(
     "state", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
     Column("Abbreviation", NVARCHAR(2), autoincrement=True, nullable=False),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
@@ -45,7 +44,7 @@ location = Table(
     Column("Latitude", Float),
     Column("Longitude", Float),
     Column("StateId", Integer, ForeignKey('state.Id')),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
@@ -60,7 +59,7 @@ contact = Table(
     Column("EmailAddress", NVARCHAR(255), nullable=False, unique=True),
     Column("PhoneNumber", NVARCHAR(255), nullable=False, unique=True),
     Column("LocationId", Integer, ForeignKey('location.Id'), unique=True, ),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
@@ -74,7 +73,7 @@ device = Table(
     Column("OS", NVARCHAR(255), nullable=False),
     Column("OSVersion", NVARCHAR(255), nullable=False),
     Column("Model", NVARCHAR(255), nullable=False),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
@@ -84,7 +83,7 @@ payment_tiers = Table(
     "paymentTierType", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
     Column("Name", NVARCHAR(255), nullable=False),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
@@ -100,12 +99,12 @@ user = Table(
     Column("PaymentTierTypeId", SmallInteger, ForeignKey('paymentTierType.Id'), nullable=False, default=1,),
     Column("ContactId", Integer, ForeignKey('contact.Id'), unique=True),
     Column("DeviceId", Integer, ForeignKey('deviceInfo.Id'), unique=True),
-    Column("LastLoginDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
-    Column("CreateDateUTC", DateTime, nullable=False, default=dt.now(timezone.utc)),
+    Column("LastLoginDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
+    Column("CreateDateUTC", DateTime, nullable=False, default=dt.datetime.now(dt.timezone.utc)),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", SmallInteger, CheckConstraint("Deleted IN (0,1)"), nullable=False, default=0),
 )
 
 # Create tables
-meta_data.create_all(engine)
+# meta_data.create_all(engine)
