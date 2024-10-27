@@ -2,6 +2,7 @@
 # Some users will be active even though they are deleted. Fix this in normalization.
 # Create FullName based on a trimmed and concated first and last name.
 import datetime as dt
+import connection_credentials
 from pytz import timezone
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Select, Float, NVARCHAR, DateTime
 from sqlalchemy.orm import sessionmaker, relationship
@@ -9,12 +10,7 @@ from sqlalchemy.dialects.postgresql import MEDIUMINT, TINYINT
 from sqlalchemy.sql import func
 
 # Create connection string
-username = ''
-password = ''
-host = ''
-port = ''
-database = ''
-connection_string = f'postgresql+psycopg2:/{username}:{password}@{host}:{port}/{database}'
+connection_string = connection_credentials.get_connection_string()
 
 # Establish connection to postgres
 # engine = create_engine(connection_string, echo = True)
@@ -114,3 +110,4 @@ user = Table(
     Column("DeleteDateUTC", DateTime, nullable=True),
     Column("Deleted", TINYINT, nullable=False, default=0),
 )
+
