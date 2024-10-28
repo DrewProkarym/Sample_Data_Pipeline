@@ -27,12 +27,12 @@ roleType = Table(
 state = Table(
     "state", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
-    Column("Name", String(255), nullable=False),
+    Column("Name", String(255), nullable=False, unique=True),
     Column("Abbreviation", String(2), autoincrement=True, nullable=False),
     Column("CreateDateUTC", DateTime, server_default=dt.datetime.now(dt.timezone.utc).strftime("%m-%d-%Y %H:%M:%S.%f")[:-3]),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
-    Column("Deleted", SmallInteger, server_server_default="0"),
+    Column("Deleted", SmallInteger, server_default="0"),
 )
 
 location = Table(
@@ -83,7 +83,7 @@ device = Table(
 payment_tiers = Table(
     "paymentTierType", meta_data,
     Column("Id", Integer, autoincrement=True, nullable=False, primary_key=True),
-    Column("Name", String(255), nullable=False),
+    Column("Name", String(255), nullable=False, unique=True),
     Column("CreateDateUTC", DateTime, server_default=dt.datetime.now(dt.timezone.utc).strftime("%m-%d-%Y %H:%M:%S.%f")[:-3]),
     Column("UpdateDateUTC", DateTime, nullable=True),
     Column("DeleteDateUTC", DateTime, nullable=True),
@@ -128,6 +128,7 @@ paymentTierType = pd.DataFrame({
     "Name": ["Basic", "Advanced", "Premium"]
 })
 
+# Insert dataframes into the database
 states.to_sql('state', con=engine, if_exists='append', index=False)
 roleType.to_sql('roleType', con=engine, if_exists='append', index=False)
 paymentTierType.to_sql('paymentTierType', con=engine, if_exists='append', index=False)
